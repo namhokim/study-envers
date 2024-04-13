@@ -1,0 +1,53 @@
+### memo creation
+POST {{host}}/memo
+Content-Type: application/json
+
+{
+  "title": "Lorem Ipsum",
+  "content": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+}
+
+> {%
+    client.test("Request successfully", function() {
+        client.assert(response.status === 201, "메모 생성 성공");
+    });
+    client.global.set("savedMemoId", response.body);
+%}
+
+### memo query
+GET {{host}}/memo/{{savedMemoId}}
+
+> {%
+    client.test("Request successfully", function() {
+        client.assert(response.status === 200, "메모 조회 성공");
+        client.assert(response.body.title === "Lorem Ipsum", "저장한 메모 제목과 일치");
+    });
+%}
+
+### memo update
+PUT {{host}}/memo/{{savedMemoId}}
+Content-Type: application/json
+
+{
+  "title": "Ipsum Lorem",
+  "content": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+}
+
+> {%
+    client.test("Request successfully", function() {
+        client.assert(response.status === 200, "메모 조회 성공");
+    });
+%}
+
+### memo update check
+GET {{host}}/memo/{{savedMemoId}}
+
+> {%
+    client.test("Request successfully", function() {
+        client.assert(response.status === 200, "메모 조회 성공");
+        client.assert(response.body.title === "Ipsum Lorem", "저장한 메모 제목과 일치");
+    });
+%}
+
+### memo delete
+DELETE {{host}}/memo/{{savedMemoId}}
